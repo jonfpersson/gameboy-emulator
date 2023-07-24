@@ -16,7 +16,6 @@ class Cpu {
 
     void CPUReset()
     {
-        // load in the game
         FILE *in;
         in = fopen("game", "rb");
         fread(&m_Cartridge[0], 0x200000, 1, in);
