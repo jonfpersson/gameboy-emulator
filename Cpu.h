@@ -10,9 +10,10 @@ typedef unsigned short WORD;
 typedef signed short SIGNED_WORD;
 
 class Cpu {
-    public:
     private:
         BYTE m_Cartridge[0x200000] ;
+        BYTE m_Rom[0x10000] ;
+
 
     void CPUReset()
     {
@@ -21,6 +22,24 @@ class Cpu {
         fread(&m_Cartridge[0], 0x200000, 1, in);
         fclose(in);
     }
+
+    public:
+        void run( )
+        {
+            const int MAXCYCLES = 4194304/60;
+            int cyclesThisUpdate = 0;
+
+            while (cyclesThisUpdate < MAXCYCLES)
+            {
+                int cycles = ExecuteNextOpcode();
+                cyclesThisUpdate+=cycles;
+                UpdateTimers(cycles);
+                UpdateGraphics(cycles);
+                DoInterupts();
+            }
+            RenderScreen();
+        }
+
 
 };
 
